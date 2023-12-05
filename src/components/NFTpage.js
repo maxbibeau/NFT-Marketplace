@@ -3,7 +3,7 @@ import { useParams } from 'react-router-dom'
 import MarketplaceJSON from '../Marketplace.json'
 import axios from 'axios'
 import { useState } from 'react'
-import { GetIpfsUrlFromPinata } from '../utils'
+import { GetIpfsUrlFromPinata } from '../utils/utils'
 import { quais } from 'quais'
 
 export default function NFTPage(props) {

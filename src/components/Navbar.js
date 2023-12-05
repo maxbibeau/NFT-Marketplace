@@ -3,52 +3,45 @@ import { useEffect, useState } from 'react'
 import { useLocation } from 'react-router'
 import { quais } from 'quais'
 import logo from '../images/full_logo.png'
+import { getAccounts, requestAccounts } from '../utils/usePelagus'
 
 function Navbar() {
-	const [connected, toggleConnect] = useState(false)
+	const [isConnected, setIsConnected] = useState(false)
 	const location = useLocation()
-	const [currAddress, updateAddress] = useState('0x')
+	const [currAddress, updateAddress] = useState({})
 
-	async function getAddress() {
-		const provider = new quais.providers.Web3Provider(window.ethereum)
-		const signer = provider.getSigner()
-		const addr = await signer.getAddress()
-		updateAddress(addr)
-	}
-
-	function updateButton() {
-		const ethereumButton = document.querySelector('.enableEthereumButton')
-		ethereumButton.textContent = 'Connected'
-		ethereumButton.classList.remove('hover:bg-blue-70')
-		ethereumButton.classList.remove('bg-blue-500')
-		ethereumButton.classList.add('hover:bg-green-70')
-		ethereumButton.classList.add('bg-green-500')
-	}
-
-	async function connectWebsite() {
-		await window.ethereum.request({ method: 'quai_requestAccounts' }).then(() => {
-			updateButton()
-			console.log('here')
-			getAddress()
-			window.location.replace(location.pathname)
-		})
-	}
-
+	// function that executes when the page is loaded
+	// checks if the user is already connected to the wallet
+	// if user is connected, account is set in state, connected is set to true
+	// if user is not connected, nothing happens on the user side and no error is printed to the console
 	useEffect(() => {
-		if (window.ethereum === undefined) return
-		let val = window.ethereum.isConnected()
-		if (val) {
-			console.log('here')
-			getAddress()
-			toggleConnect(val)
-			updateButton()
+		if (window.ethereum !== undefined) {
+			getAccounts().then((account) => {
+				if (account !== undefined) {
+					updateAddress(account)
+					setIsConnected(true)
+				}
+			})
+		} else {
+			console.log('Window.ethereum is undefined')
+			return
 		}
-
-		window.ethereum.on('accountsChanged', function (accounts) {
-			window.location.replace(location.pathname)
-		})
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [])
+
+	// function that executes when the connect button is clicked
+	// sends a request for accounts to the wallet
+	// if user accepts, account is set in state, connected is set to true
+	// if user denies, nothing happens on the user side and no error is printed to the console
+	async function connectWebsite() {
+		await requestAccounts().then((account) => {
+			console.log(account)
+			if (account !== undefined) {
+				updateAddress(account)
+				setIsConnected(true)
+			}
+		})
+	}
 
 	return (
 		<div className=''>
@@ -97,10 +90,15 @@ function Navbar() {
 							)}
 							<li>
 								<button
-									className='enableEthereumButton bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded text-sm'
+									className={
+										isConnected
+											? 'bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded text-sm'
+											: 'bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded text-sm'
+									}
 									onClick={connectWebsite}
+									disabled={isConnected}
 								>
-									{connected ? 'Connected' : 'Connect Wallet'}
+									{isConnected ? 'Connected' : 'Connect Wallet'}
 								</button>
 							</li>
 						</ul>
@@ -108,8 +106,9 @@ function Navbar() {
 				</ul>
 			</nav>
 			<div className='text-white text-bold text-right mr-10 text-sm'>
-				{currAddress !== '0x' ? 'Connected to' : 'Not Connected. Please login to view NFTs'}{' '}
-				{currAddress !== '0x' ? currAddress.substring(0, 15) + '...' : ''}
+				{currAddress.addr ? 'Connected to' : 'Not Connected. Please login to view NFTs'}{' '}
+				{currAddress.addr ? <strong>{currAddress.shard}: </strong> : ''}
+				{currAddress.addr ? currAddress.addr.substring(0, 10) + '...' : ''}
 			</div>
 		</div>
 	)
