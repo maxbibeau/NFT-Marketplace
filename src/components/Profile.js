@@ -57,9 +57,9 @@ export default function Profile() {
 		updateTotalPrice(sumPrice.toPrecision(3))
 	}
 
-	// const params = useParams()
-	// const tokenId = params.tokenId
-	// if (!dataFetched) getNFTData(tokenId)
+	const params = useParams()
+	const tokenId = params.tokenId
+	if (!dataFetched) getNFTData(tokenId)
 
 	return (
 		<div

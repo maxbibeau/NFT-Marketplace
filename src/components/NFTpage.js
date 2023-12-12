@@ -66,10 +66,10 @@ export default function NFTPage(props) {
 
 	const params = useParams()
 	const tokenId = params.tokenId
-	// if(!dataFetched)
-	//     getNFTData(tokenId);
-	// if(typeof data.image == "string")
-	//     data.image = GetIpfsUrlFromPinata(data.image);
+	if(!dataFetched)
+	    getNFTData(tokenId);
+	if(typeof data.image == "string")
+	    data.image = GetIpfsUrlFromPinata(data.image);
 
 	return (
 		<div style={{ minHeight: '100vh' }}>

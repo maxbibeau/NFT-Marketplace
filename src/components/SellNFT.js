@@ -65,7 +65,6 @@ export default function SellNFT() {
 			//upload the metadata JSON to IPFS
 			const response = await uploadJSONToIPFS(nftJSON)
 			if (response.success === true) {
-				console.log('Uploaded JSON to Pinata: ', response)
 				return response.pinataURL
 			}
 		} catch (e) {
@@ -108,7 +107,6 @@ export default function SellNFT() {
 		}
 	}
 
-	console.log('Working', process.env)
 	return (
 		<div className=''>
 			<Navbar></Navbar>

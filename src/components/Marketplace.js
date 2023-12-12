@@ -75,7 +75,7 @@ export default function Marketplace() {
 		updateData(items)
 	}
 
-	// if (!dataFetched) getAllNFTs()
+	if (!dataFetched) getAllNFTs()
 
 	return (
 		<div>
