@@ -74,12 +74,12 @@ const Header = () => {
     <div className='header section__padding'>
       <div className="header-content">
         <div>
-          <h1>Explore, collect, and hodl NFTs on top of Quai Network</h1>
+          <h1>Trade and collect digital collectibles on MarginEX: the first Quai NFT Marketplace.</h1>
           <img className='shake-vertical' src={coin} alt="" />
         </div>
       </div>
       <div className="header-slider">
-        <h1>Top Traders (Coming soon)</h1>
+        <h1>Top Traders (24hr PNL) [Coming Soon!]</h1>
        <Slider {...settings} className='slider'>
             <div className='slider-card'>
               <p className='slider-card-number'>1</p>
